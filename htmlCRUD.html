@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="w-full max-w-md bg-white rounded-lg shadow-md p-8">
+        <h2 class="text-2xl font-semibold text-gray-800 text-center mb-6">Gestión de Usuarios</h2>
+        <form action="metodosCRUD.php" method="POST">
+            <!-- Nombre -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="nombre">Nombre</label>
+                <input 
+                    type="text" 
+                    name="nombre" 
+                    id="nombre" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ingrese el nombre">
+            </div>
+
+            <!-- Apellido -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="apellido">Apellido</label>
+                <input 
+                    type="text" 
+                    name="apellido" 
+                    id="apellido" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ingrese el apellido">
+            </div>
+
+            <!-- Teléfono -->
+            <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="telefono">Teléfono</label>
+                <input 
+                    type="text" 
+                    name="telefono" 
+                    id="telefono" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Ingrese el teléfono">
+            </div>
+
+            <!-- Botones CRUD -->
+            <div class="grid grid-cols-2 gap-4">
+                <button 
+                    type="submit" 
+                    name="accion" 
+                    value="create" 
+                    class="w-full bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
+                    Crear
+                </button>
+                <button 
+                    type="submit" 
+                    name="accion" 
+                    value="read" 
+                    class="w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
+                    Buscar
+                </button>
+                <button 
+                    type="submit" 
+                    name="accion" 
+                    value="update" 
+                    class="w-full bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
+                    Actualizar
+                </button>
+                <button 
+                    type="submit" 
+                    name="accion" 
+                    value="delete" 
+                    class="w-full bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none">
+                    Eliminar
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
