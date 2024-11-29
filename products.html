@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Nuestros Productos</h1>
     <button id="openModal">Crear Producto</button>
-    <!-- Modal para Crear Producto -->
     <div id="modal">
         <h2>Crear Nuevo Producto</h2>
         <form method="POST" action="productCRUD.php">
@@ -20,7 +20,7 @@
         </form>
     </div>
     <div id="overlay"></div>
-    
+
     <h2>Leer Productos</h2>
     <form method="POST" action="productCRUD.php">
         <input type="hidden" name="accion" value="read_products">
@@ -28,7 +28,7 @@
     </form>
 
     <h2>Actualizar Producto</h2>
-    <form method="POST" action="tu_archivo.php">
+    <form method="POST" action="productCRUD.php">
         <input type="hidden" name="accion" value="update_product">
         <label for="idActualizar">ID del Producto:</label>
         <input type="number" name="id" id="idActualizar" required>
@@ -38,11 +38,12 @@
     </form>
 
     <h2>Eliminar Producto</h2>
-    <form method="POST" action="tu_archivo.php">
+    <form method="POST" action="productCRUD.php">
         <input type="hidden" name="accion" value="delete_product">
         <label for="idEliminar">ID del Producto:</label>
         <input type="number" name="id" id="idEliminar" required>
         <button type="submit">Eliminar Producto</button>
     </form>
+    <script src="script.js"></script>
 </body>
 </html>
