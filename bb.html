@@ -4,18 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPS vacunate SAS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>IPS Vacunate SAS</h1>
-    <nav>
-        <a href="/bb.html"><button>Acerca de</button></a>
-        <a href="products.html"><button>Productos</button></a>
-        <a href="client.html"><button>Clientes</button></a>
-        <a href="invoice.html"><button>Facturas</button></a>
+    <h1 class="text-center py-4">IPS Vacunate SAS</h1>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Inicio</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client.html">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="invoice.html">Facturas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </nav>
     <main>
-
+        <div class="container">
+            <h2>Acerca de la IPS Vacunate</h2>
+            <p class="descripcion">La IPS Vacunate es una institución dedicada a promover la salud y el bienestar de la comunidad a través de servicios médicos y campañas de vacunación.</p>
+        </div>
     </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

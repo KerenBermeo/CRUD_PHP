@@ -1,5 +1,4 @@
 <?php 
-// Funciones para la tabla Cliente
 // Crear  cliente
 function crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento) {
     try {
@@ -13,7 +12,8 @@ function crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento
         $stmt->bindParam(':telefono', $telefono);
         $stmt->bindParam(':fechaNacimiento', $fechaNacimiento);
         $stmt->execute();
-        echo "Cliente creado exitosamente.";
+        header("Location: client.html");
+        exit;
     } catch (PDOException $e) {
         echo "Error al crear el cliente: " . $e->getMessage();
     }
@@ -73,42 +73,53 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $accion = $_POST['accion'] ?? '';
 
     switch ($accion) {
-        case 'create_product':
-            $nombreProducto = htmlspecialchars(trim($_POST['nombreProducto'] ?? ''));
-            if ($nombreProducto) {
-                crearProducto($pdo, $nombreProducto);
+        case 'create_client':
+            // Obtener los datos del formulario para crear un cliente
+            $nombre = htmlspecialchars(trim($_POST['nombre'] ?? ''));
+            $apellido = htmlspecialchars(trim($_POST['apellido'] ?? ''));
+            $tipoDocumento = htmlspecialchars(trim($_POST['tipoDocumento'] ?? ''));
+            $numeroDocumento = htmlspecialchars(trim($_POST['numeroDocumento'] ?? ''));
+            $telefono = htmlspecialchars(trim($_POST['telefono'] ?? ''));
+            $fechaNacimiento = htmlspecialchars(trim($_POST['fechaNacimiento'] ?? ''));
+
+            // Verificar que todos los campos estén completos
+            if ($nombre && $apellido && $tipoDocumento && $numeroDocumento && $telefono && $fechaNacimiento) {
+                crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento);
             } else {
-                echo "Error: el campo 'nombreProducto' es obligatorio.";
+                echo "Error: Todos los campos son obligatorios.";
             }
             break;
 
-        case 'read_product':
-            leerProductos($pdo);
+        case 'read_client':
+            leerClientes($pdo);
             break;
 
-        case 'update_product':
+        case 'update_client':
+            // Obtener los datos del formulario para actualizar un cliente
             $id = intval($_POST['id'] ?? 0);
-            $nuevoNombre = htmlspecialchars(trim($_POST['nuevoNombre'] ?? ''));
-            if ($id > 0 && $nuevoNombre) {
-                actualizarProducto($pdo, $id, $nuevoNombre);
+            $nombre = htmlspecialchars(trim($_POST['nombre'] ?? ''));
+            $apellido = htmlspecialchars(trim($_POST['apellido'] ?? ''));
+            $telefono = htmlspecialchars(trim($_POST['telefono'] ?? ''));
+
+            if ($id > 0 && $nombre && $apellido && $telefono) {
+                actualizarCliente($pdo, $id, $nombre, $apellido, $telefono);
             } else {
-                echo "Error: ambos campos 'id' y 'nuevoNombre' son obligatorios.";
+                echo "Error: Debes completar el 'id', 'nombre', 'apellido' y 'telefono'.";
             }
             break;
         
-        case 'delete_product':
+        case 'delete_client':
             $id = intval($_POST['id'] ?? 0);
             if ($id > 0) {
-                eliminarProducto($pdo, $id);
+                eliminarCliente($pdo, $id);
             } else {
-                echo "Error: el campo 'id' es obligatorio.";
+                echo "Error: El campo 'id' es obligatorio.";
             }
             break;
 
         default:
-            echo "Error: acción no reconocida.";
+            echo "Error: Acción no reconocida.";
             break;
     }
 }
-
 ?>

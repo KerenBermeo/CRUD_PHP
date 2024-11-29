@@ -1,6 +1,8 @@
 /* Estilo para la barra de navegación */
 .navbar {
     margin-bottom: 20px;
+    padding: 0.8rem 1rem; 
+    width: 100%;
 }
 
 /* Estilo para los botones de la página */
@@ -27,3 +29,30 @@ form {
 body {
     background-color: #e9ecef;
 }
+
+main {
+    background-image: url('./img/img1.jpg'); 
+    background-size: 100% auto;
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+.descripcion {
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo gris oscuro con opacidad */
+    color: white; /* Color del texto en blanco para que resalte sobre el fondo */
+    padding: 15px; /* Espaciado interno alrededor del texto */
+    border-radius: 8px; /* Bordes redondeados */
+    font-size: 1.1rem; /* Tamaño de fuente un poco más grande */
+    line-height: 1.6; /* Altura de línea para mejor legibilidad */
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
