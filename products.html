@@ -1,49 +1,114 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos</title>
+    <title>Productos - Laboratorio</title>
+    <!-- Incluyendo Bootstrap desde CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-    <h1>Nuestros Productos</h1>
-    <button id="openModal">Crear Producto</button>
-    <div id="modal">
-        <h2>Crear Nuevo Producto</h2>
+    <div class="container">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+            <a class="navbar-brand" href="#">IPS Vacunate SAS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="bb.html">Acerca de</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client.html">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="invoice.html">Facturas</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Título de la página -->
+        <h1 class="text-center mb-4">Nuestros Productos</h1>
+
+        <!-- Botón para crear nuevo producto -->
+        <div class="text-center mb-4">
+            <button id="openModal" class="btn btn-success">Crear Producto</button>
+        </div>
+
+        <!-- Modal para crear producto -->
+        <div id="modal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Crear Nuevo Producto</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="productCRUD.php">
+                            <input type="hidden" name="accion" value="create_product">
+                            <div class="mb-3">
+                                <label for="nombreProducto" class="form-label">Nombre del Producto:</label>
+                                <input type="text" name="nombreProducto" id="nombreProducto" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección para leer productos -->
+        <h2 class="mt-4">Leer Productos</h2>
         <form method="POST" action="productCRUD.php">
-            <input type="hidden" name="accion" value="create_product">
-            <label for="nombreProducto">Nombre del Producto:</label>
-            <input type="text" name="nombreProducto" id="nombreProducto" required>
-            <button type="submit">Guardar</button>
-            <button type="button" id="closeModal">Cancelar</button>
+            <input type="hidden" name="accion" value="read_products">
+            <button type="submit" class="btn btn-info">Mostrar Productos</button>
+        </form>
+
+        <!-- Sección para actualizar productos -->
+        <h2 class="mt-4">Actualizar Producto</h2>
+        <form method="POST" action="productCRUD.php">
+            <input type="hidden" name="accion" value="update_product">
+            <div class="mb-3">
+                <label for="idActualizar" class="form-label">ID del Producto:</label>
+                <input type="number" name="id" id="idActualizar" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="nuevoNombre" class="form-label">Nuevo Nombre:</label>
+                <input type="text" name="nuevoNombre" id="nuevoNombre" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-warning">Actualizar Producto</button>
+        </form>
+
+        <!-- Sección para eliminar productos -->
+        <h2 class="mt-4">Eliminar Producto</h2>
+        <form method="POST" action="productCRUD.php">
+            <input type="hidden" name="accion" value="delete_product">
+            <div class="mb-3">
+                <label for="idEliminar" class="form-label">ID del Producto:</label>
+                <input type="number" name="id" id="idEliminar" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Eliminar Producto</button>
         </form>
     </div>
-    <div id="overlay"></div>
 
-    <h2>Leer Productos</h2>
-    <form method="POST" action="productCRUD.php">
-        <input type="hidden" name="accion" value="read_products">
-        <button type="submit">Mostrar Productos</button>
-    </form>
-
-    <h2>Actualizar Producto</h2>
-    <form method="POST" action="productCRUD.php">
-        <input type="hidden" name="accion" value="update_product">
-        <label for="idActualizar">ID del Producto:</label>
-        <input type="number" name="id" id="idActualizar" required>
-        <label for="nuevoNombre">Nuevo Nombre:</label>
-        <input type="text" name="nuevoNombre" id="nuevoNombre" required>
-        <button type="submit">Actualizar Producto</button>
-    </form>
-
-    <h2>Eliminar Producto</h2>
-    <form method="POST" action="productCRUD.php">
-        <input type="hidden" name="accion" value="delete_product">
-        <label for="idEliminar">ID del Producto:</label>
-        <input type="number" name="id" id="idEliminar" required>
-        <button type="submit">Eliminar Producto</button>
-    </form>
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
     <script src="script.js"></script>
 </body>
+
 </html>
+

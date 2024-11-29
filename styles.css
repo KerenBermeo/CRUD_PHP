@@ -1,93 +1,29 @@
-/* General styles */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f9fc;
-    color: #333;
-}
-
-/* Header */
-h1 {
-    text-align: center;
-    background-color: #0077b6; /* Azul profesional */
-    color: #fff;
-    margin: 0;
-    padding: 20px 0;
-    font-size: 2em;
-}
-
-/* Navigation styles */
-nav {
-    display: flex;
-    justify-content: center;
-    background-color: #00b4d8; /* Azul claro */
-    padding: 10px 0;
+/* Estilo para la barra de navegación */
+.navbar {
     margin-bottom: 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-nav a {
-    text-decoration: none;
-    margin: 0 10px;
+/* Estilo para los botones de la página */
+button {
+    margin-top: 10px;
 }
 
-nav button {
-    background-color: #90e0ef; /* Azul pastel */
-    border: none;
-    padding: 10px 20px;
-    font-size: 1em;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
+/* Estilo para el modal */
+.modal-content {
+    background-color: #f8f9fa;
 }
 
-nav button:hover {
-    background-color: #0077b6; /* Azul profesional */
-    color: #fff;
-    transform: scale(1.05);
+/* Estilo general de las secciones */
+h2 {
+    color: #004085;
+    margin-top: 20px;
 }
 
-/* Main content */
-main {
-    padding: 20px;
-    text-align: center;
+form {
+    margin-top: 10px;
 }
 
-/* Responsive design */
-@media (max-width: 768px) {
-    h1 {
-        font-size: 1.5em;
-        padding: 15px 0;
-    }
-
-    nav {
-        flex-direction: column;
-    }
-
-    nav a {
-        margin: 5px 0;
-    }
-}
-
-#modal {
-    display: none;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 20px;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1000;
-}
-#overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+/* Fondo de la página */
+body {
+    background-color: #e9ecef;
 }

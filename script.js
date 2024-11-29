@@ -1,19 +1,21 @@
-const modal = document.getElementById('modal');
-const overlay = document.getElementById('overlay');
-const openModal = document.getElementById('openModal');
-const closeModal = document.getElementById('closeModal');
+document.addEventListener('DOMContentLoaded', function () {
+    // Asegúrate de que los elementos existen antes de agregar los eventos
+    const openModalButton = document.getElementById('openModal');
+    const modal = new bootstrap.Modal(document.getElementById('modal')); // Crear una instancia del modal
 
-openModal.addEventListener('click', () => {
-    modal.style.display = 'block';
-    overlay.style.display = 'block';
+    // Verificar si el botón de abrir modal existe antes de agregar el evento
+    if (openModalButton) {
+        openModalButton.addEventListener('click', function () {
+            modal.show(); // Mostrar el modal cuando se hace clic en el botón
+        });
+    }
+
+    // También puedes añadir el evento para el botón de cerrar el modal (esto es opcional si usas el data-bs-dismiss)
+    const closeModalButton = document.getElementById('closeModal');
+    if (closeModalButton) {
+        closeModalButton.addEventListener('click', function () {
+            modal.hide(); // Cerrar el modal si haces clic en "Cancelar"
+        });
+    }
 });
 
-closeModal.addEventListener('click', () => {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-});
-
-overlay.addEventListener('click', () => {
-    modal.style.display = 'none';
-    overlay.style.display = 'none';
-});

@@ -31,10 +31,11 @@ function leerProductos($pdo) {
         $html = <<<HTML
         <div style="max-width: 1200px; margin: 0 auto; font-family: Arial, sans-serif;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h1 style="color: #333;">Lista de Productos</h1>
+                
                 <a href="products.html" style="text-decoration: none;">
                     <button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Volver</button>
                 </a>
+                <h1 style="color: #333;">Lista de Productos</h1>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
         HTML;
