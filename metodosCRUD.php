@@ -1,75 +1,8 @@
 <?php
-// Configuración de conexión a la base de datos
-$host = 'localhost';
-$dbname = 'crud_php';
-$usuario = 'root';
-$contraseña = '';
-
-try {
-    // Crear una nueva conexión PDO
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $usuario, $contraseña);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("¡Error en la conexión a la base de datos!: " . $e->getMessage());
-}
 
 
-// Funciones para la tabla Producto
-// Crear Producto
-function crearProducto($pdo, $nombreProducto) {
-    try {
-        $sql = "INSERT INTO producto (nombre_producto) VALUES (:nombre)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nombre', $nombreProducto);
-        $stmt->execute();
-        echo "Producto creado exitosamente.";
-    } catch (PDOException $e) {
-        echo "Error al crear el producto: " . $e->getMessage();
-    }
-}
 
-// Leer los Productos
-function leerProductos($pdo) {
-    try {
-        $sql = "SELECT * FROM producto";
-        $stmt = $pdo->query($sql);
-        $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($productos as $producto) {
-            echo "ID: " . $producto['id'] . "<br>";
-            echo "Nombre: " . $producto['nombre_producto'] . "<br><br>";
-        }
-    } catch (PDOException $e) {
-        echo "Error al leer productos: " . $e->getMessage();
-    }
-}
-
-// Actualizar los Productos 
-function actualizarProducto($pdo, $id, $nuevoNombre) {
-    try {
-        $sql = "UPDATE producto SET nombre_producto = :nombre WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nombre', $nuevoNombre);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        echo "Producto actualizado exitosamente.";
-    } catch (PDOException $e) {
-        echo "Error al actualizar el producto: " . $e->getMessage();
-    }
-}
-
-// Eliminar un producto
-function eliminarProducto($pdo, $id) {
-    try {
-        $sql = "DELETE FROM producto WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        echo "Producto eliminado exitosamente.";
-    } catch (PDOException $e) {
-        echo "Error al eliminar el producto: " . $e->getMessage();
-    }
-}
 
 // Funciones para la tabla Cliente
 // Crear  cliente

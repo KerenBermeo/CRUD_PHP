@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+</head>
+<body>
+    <h1>Nuestros Productos</h1>
+    <button id="openModal">Crear Producto</button>
+    <!-- Modal para Crear Producto -->
+    <div id="modal">
+        <h2>Crear Nuevo Producto</h2>
+        <form method="POST" action="productCRUD.php">
+            <input type="hidden" name="accion" value="create_product">
+            <label for="nombreProducto">Nombre del Producto:</label>
+            <input type="text" name="nombreProducto" id="nombreProducto" required>
+            <button type="submit">Guardar</button>
+            <button type="button" id="closeModal">Cancelar</button>
+        </form>
+    </div>
+    <div id="overlay"></div>
+    
+    <h2>Leer Productos</h2>
+    <form method="POST" action="productCRUD.php">
+        <input type="hidden" name="accion" value="read_products">
+        <button type="submit">Mostrar Productos</button>
+    </form>
+
+    <h2>Actualizar Producto</h2>
+    <form method="POST" action="tu_archivo.php">
+        <input type="hidden" name="accion" value="update_product">
+        <label for="idActualizar">ID del Producto:</label>
+        <input type="number" name="id" id="idActualizar" required>
+        <label for="nuevoNombre">Nuevo Nombre:</label>
+        <input type="text" name="nuevoNombre" id="nuevoNombre" required>
+        <button type="submit">Actualizar Producto</button>
+    </form>
+
+    <h2>Eliminar Producto</h2>
+    <form method="POST" action="tu_archivo.php">
+        <input type="hidden" name="accion" value="delete_product">
+        <label for="idEliminar">ID del Producto:</label>
+        <input type="number" name="id" id="idEliminar" required>
+        <button type="submit">Eliminar Producto</button>
+    </form>
+</body>
+</html>
