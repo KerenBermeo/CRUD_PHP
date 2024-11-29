@@ -1,6 +1,5 @@
 <?php
-// Funciones para la tabla Factura
-// Crear una factura 
+// Crear una factura
 function crearFactura($pdo, $numeroFactura, $idCliente, $idProducto, $cantidad, $valor) {
     try {
         $sql = "INSERT INTO factura (numero_factura, id_cliente, id_producto, cantidad, valor) 
@@ -23,8 +22,8 @@ function leerFacturas($pdo) {
     try {
         $sql = "SELECT f.id, f.numero_factura, c.nombre AS cliente, p.nombre_producto AS producto, f.cantidad, f.valor 
                 FROM factura f 
-                INNER JOIN cliente c ON f.numero_cliente = c.id 
-                INNER JOIN producto p ON f.numero_producto = p.id";
+                INNER JOIN cliente c ON f.id_cliente = c.id 
+                INNER JOIN producto p ON f.id_producto = p.id";
         $stmt = $pdo->query($sql);
         $facturas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -67,40 +66,49 @@ function eliminarFactura($pdo, $id) {
     } catch (PDOException $e) {
         echo "Error al eliminar la factura: " . $e->getMessage();
     }
-} 
+}
 
 // Manejo de datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $accion = $_POST['accion'] ?? '';
+    $pdo = new PDO('mysql:host=localhost;dbname=tu_base_de_datos', 'usuario', 'contraseña');
 
     switch ($accion) {
-        case 'create_invoice':
-            $nombreProducto = htmlspecialchars(trim($_POST['nombreProducto'] ?? ''));
-            if ($nombreProducto) {
-                crearProducto($pdo, $nombreProducto);
+        case 'crear_factura':
+            $numeroFactura = htmlspecialchars(trim($_POST['numeroFactura'] ?? ''));
+            $idCliente = intval($_POST['idCliente'] ?? 0);
+            $idProducto = intval($_POST['idProducto'] ?? 0);
+            $cantidad = intval($_POST['cantidad'] ?? 0);
+            $valor = floatval($_POST['valor'] ?? 0.0);
+
+            if ($numeroFactura && $idCliente > 0 && $idProducto > 0 && $cantidad > 0 && $valor > 0) {
+                crearFactura($pdo, $numeroFactura, $idCliente, $idProducto, $cantidad, $valor);
             } else {
-                echo "Error: el campo 'nombreProducto' es obligatorio.";
+                echo "Error: todos los campos son obligatorios.";
             }
             break;
 
-        case 'read_invoice':
-            leerProductos($pdo);
+        case 'leer_facturas':
+            leerFacturas($pdo);
             break;
 
-        case 'update_invoice':
+        case 'actualizar_factura':
             $id = intval($_POST['id'] ?? 0);
-            $nuevoNombre = htmlspecialchars(trim($_POST['nuevoNombre'] ?? ''));
-            if ($id > 0 && $nuevoNombre) {
-                actualizarProducto($pdo, $id, $nuevoNombre);
+            $cantidad = intval($_POST['cantidad'] ?? 0);
+            $valor = floatval($_POST['valor'] ?? 0.0);
+
+            if ($id > 0 && $cantidad > 0 && $valor > 0) {
+                actualizarFactura($pdo, $id, $cantidad, $valor);
             } else {
-                echo "Error: ambos campos 'id' y 'nuevoNombre' son obligatorios.";
+                echo "Error: todos los campos son obligatorios.";
             }
             break;
-        
-        case 'delete_invoice':
+
+        case 'eliminar_factura':
             $id = intval($_POST['id'] ?? 0);
+
             if ($id > 0) {
-                eliminarProducto($pdo, $id);
+                eliminarFactura($pdo, $id);
             } else {
                 echo "Error: el campo 'id' es obligatorio.";
             }
@@ -111,5 +119,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
     }
 }
-
 ?>
