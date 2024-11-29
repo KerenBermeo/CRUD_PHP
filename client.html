@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes - Laboratorio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Barra de navegación -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+            <a class="navbar-brand" href="#">IPS Vacunate SAS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="bb.html">Acerca de</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="products.html">Productos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="client.html">Clientes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="invoice.html">Facturas</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Título de la página -->
+        <h1 class="text-center mb-4">Gestión de Clientes</h1>
+
+        <!-- Botón para crear nuevo cliente -->
+        <div class="text-center mb-4">
+            <button id="openModal" class="btn btn-dark">Crear Cliente</button>
+        </div>
+
+        <!-- Modal para crear cliente -->
+        <div id="modal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalLabel">Crear Nuevo Cliente</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="clientCRUD.php">
+                            <input type="hidden" name="accion" value="create_client">
+                            <div class="mb-3">
+                                <label for="nombre" class="form-label">Nombre:</label>
+                                <input type="text" name="nombre" id="nombre" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="apellido" class="form-label">Apellido:</label>
+                                <input type="text" name="apellido" id="apellido" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="tipoDocumento" class="form-label">Tipo de Documento:</label>
+                                <select name="tipoDocumento" id="tipoDocumento" class="form-select" required>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="TI">Tarjeta de Identidad</option>
+                                    <option value="CE">Cédula de Extranjería</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="numeroDocumento" class="form-label">Número de Documento:</label>
+                                <input type="text" name="numeroDocumento" id="numeroDocumento" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="telefono" class="form-label">Teléfono:</label>
+                                <input type="text" name="telefono" id="telefono" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                                <input type="date" name="fechaNacimiento" id="fechaNacimiento" class="form-control" required>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección para leer clientes -->
+        <h2 class="mt-4">Consultar Clientes</h2>
+        <form method="POST" action="clientCRUD.php">
+            <input type="hidden" name="accion" value="read_client">
+            <button type="submit" class="btn btn-info">Mostrar Clientes</button>
+        </form>
+
+        <!-- Sección para actualizar clientes -->
+        <h2 class="mt-4">Actualizar Cliente</h2>
+        <form method="POST" action="clientCRUD.php">
+            <input type="hidden" name="accion" value="update_client">
+            <div class="mb-3">
+                <label for="idActualizar" class="form-label">ID del Cliente:</label>
+                <input type="number" name="id" id="idActualizar" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="nombreActualizar" class="form-label">Nuevo Nombre:</label>
+                <input type="text" name="nombre" id="nombreActualizar" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="apellidoActualizar" class="form-label">Nuevo Apellido:</label>
+                <input type="text" name="apellido" id="apellidoActualizar" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="telefonoActualizar" class="form-label">Nuevo Teléfono:</label>
+                <input type="text" name="telefono" id="telefonoActualizar" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-warning">Actualizar Cliente</button>
+        </form>
+
+        <!-- Sección para eliminar clientes -->
+        <h2 class="mt-4">Eliminar Cliente</h2>
+        <form method="POST" action="clientCRUD.php">
+            <input type="hidden" name="accion" value="delete_client">
+            <div class="mb-3">
+                <label for="idEliminar" class="form-label">ID del Cliente:</label>
+                <input type="number" name="id" id="idEliminar" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Eliminar Cliente</button>
+        </form>
+    </div>
+
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

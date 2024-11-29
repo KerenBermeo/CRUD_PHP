@@ -26,14 +26,46 @@ function leerClientes($pdo) {
         $stmt = $pdo->query($sql);
         $clientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        $html = <<<HTML
+        <div style="max-width: 1200px; margin: 0 auto; font-family: Arial, sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                
+                <a href="client.html" style="text-decoration: none;">
+                    <button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Volver</button>
+                </a>
+                <h1 style="color: #333;">Lista de Clientes</h1>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        HTML;
+
         foreach ($clientes as $cliente) {
-            echo "ID: " . $cliente['id'] . "<br>";
-            echo "Nombre: " . $cliente['nombre'] . " " . $cliente['apellido'] . "<br>";
-            echo "Tipo de documento: " . $cliente['tipo_documento'] . "<br>";
-            echo "Número de documento: " . $cliente['numero_documento'] . "<br>";
-            echo "Teléfono: " . $cliente['telefono'] . "<br>";
-            echo "Fecha de nacimiento: " . $cliente['fecha_nacimiento'] . "<br><br>";
+            $id = htmlspecialchars($cliente['id']);
+            $nombre = htmlspecialchars($cliente['nombre']);
+            $apellido = htmlspecialchars($cliente['apellido']);
+            $tipoDocumento = htmlspecialchars($cliente['tipo_documento']);
+            $numeroDocumento = htmlspecialchars($cliente['numero_documento']);
+            $telefono = htmlspecialchars($cliente['telefono']);
+            $fechaNacimiento = htmlspecialchars($cliente['fecha_nacimiento']);
+
+            $html .= <<<HTML
+            <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; background-color: #f9f9f9;">
+                <h2 style="color: #4CAF50; font-size: 20px;">$nombre $apellido</h2>
+                <p><strong>ID:</strong> $id</p>
+                <p><strong>Tipo de documento:</strong> $tipoDocumento</p>
+                <p><strong>Número de documento:</strong> $numeroDocumento</p>
+                <p><strong>Teléfono:</strong> $telefono</p>
+                <p><strong>Fecha de nacimiento:</strong> $fechaNacimiento</p>
+            </div>
+            HTML;
         }
+
+        $html .= <<<HTML
+            </div>
+        </div>
+        HTML;
+
+        echo $html;
+
     } catch (PDOException $e) {
         echo "Error al leer los clientes: " . $e->getMessage();
     }
@@ -49,7 +81,8 @@ function actualizarCliente($pdo, $id, $nombre, $apellido, $telefono) {
         $stmt->bindParam(':telefono', $telefono);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        echo "Cliente actualizado exitosamente.";
+        header("Location: client.html");
+        exit;
     } catch (PDOException $e) {
         echo "Error al actualizar el cliente: " . $e->getMessage();
     }
@@ -62,7 +95,8 @@ function eliminarCliente($pdo, $id) {
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        echo "Cliente eliminado exitosamente.";
+        header("Location: client.html");
+        exit;
     } catch (PDOException $e) {
         echo "Error al eliminar el cliente: " . $e->getMessage();
     }
