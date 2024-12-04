@@ -39,20 +39,6 @@ function leerFacturas($pdo) {
     }
 }
 
-// Actualizar una factura
-function actualizarFactura($pdo, $id, $cantidad, $valor) {
-    try {
-        $sql = "UPDATE factura SET cantidad = :cantidad, valor = :valor WHERE id = :id";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':cantidad', $cantidad);
-        $stmt->bindParam(':valor', $valor);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        echo "Factura actualizada exitosamente.";
-    } catch (PDOException $e) {
-        echo "Error al actualizar la factura: " . $e->getMessage();
-    }
-}
 
 // Eliminar una factura
 function eliminarFactura($pdo, $id) {
@@ -143,18 +129,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         case 'leer_facturas':
             leerFacturas($pdo);
-            break;
-
-        case 'actualizar_factura':
-            $id = intval($_POST['id'] ?? 0);
-            $cantidad = intval($_POST['cantidad'] ?? 0);
-            $valor = floatval($_POST['valor'] ?? 0.0);
-
-            if ($id > 0 && $cantidad > 0 && $valor > 0) {
-                actualizarFactura($pdo, $id, $cantidad, $valor);
-            } else {
-                echo "Error: todos los campos son obligatorios.";
-            }
             break;
 
         case 'eliminar_factura':
