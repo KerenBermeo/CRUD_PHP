@@ -14,8 +14,7 @@ CREATE TABLE cliente (
 );
 
 CREATE TABLE factura (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    numero_factura VARCHAR(30) NOT NULL,
+    numero_factura INT PRIMARY KEY AUTO_INCREMENT,
     id_cliente INT NOT NULL,
     id_producto INT NOT NULL,
     cantidad INT NOT NULL,

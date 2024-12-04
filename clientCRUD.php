@@ -1,4 +1,8 @@
 <?php 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+require_once 'connection.php';
 // Crear  cliente
 function crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento) {
     try {
@@ -50,7 +54,7 @@ function leerClientes($pdo) {
             $html .= <<<HTML
             <div style="border: 1px solid #ddd; border-radius: 8px; padding: 15px; background-color: #f9f9f9;">
                 <h2 style="color: #4CAF50; font-size: 20px;">$nombre $apellido</h2>
-                <p><strong>ID:</strong> $id</p>
+                <p><strong>Codigo:</strong> $id</p>
                 <p><strong>Tipo de documento:</strong> $tipoDocumento</p>
                 <p><strong>Número de documento:</strong> $numeroDocumento</p>
                 <p><strong>Teléfono:</strong> $telefono</p>
@@ -72,21 +76,92 @@ function leerClientes($pdo) {
 }
 
 // Actualizar un cliente
-function actualizarCliente($pdo, $id, $nombre, $apellido, $telefono) {
+function actualizarCliente($pdo, $id, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento) {
+    echo "<pre>";
+    var_dump($id, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento);
+    echo "</pre>";
+    
     try {
-        $sql = "UPDATE cliente SET nombre = :nombre, apellido = :apellido, telefono = :telefono WHERE id = :id";
+        $sql = "UPDATE cliente SET ";
+        $params = [];
+        
+        //Solo agregar a la consulta los campos que se deben actualizar
+        if (!empty($nombre)) {
+            echo "Nombre: $nombre\n";
+            $sql .= "nombre = :nombre, ";
+            $params[':nombre'] = $nombre;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        if (!empty($apellido)) {
+            echo "Apellido: $apellido\n";
+            $sql .= "apellido = :apellido, ";
+            $params[':apellido'] = $apellido;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        if (!empty($tipoDocumento)) {
+            echo "Tipo de documento: $tipoDocumento\n";
+            $sql .= "tipo_documento = :tipoDocumento, ";
+            $params[':tipoDocumento'] = $tipoDocumento;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        if (!empty($numeroDocumento)) {
+            echo "Número de documento: $numeroDocumento\n"; 
+            $sql .= "numero_documento = :numeroDocumento, ";
+            $params[':numeroDocumento'] = $numeroDocumento;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        if (!empty($telefono)) {
+            echo "Teléfono: $telefono\n";
+            $sql .= "telefono = :telefono, ";
+            $params[':telefono'] = $telefono;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        if (!empty($fechaNacimiento)) {
+            echo "Fecha de nacimiento: $fechaNacimiento\n";
+            $sql .= "fecha_nacimiento = :fechaNacimiento, ";
+            $params[':fechaNacimiento'] = $fechaNacimiento;
+        }else {
+            echo "Tipo de documento está vacío\n";
+        }
+        
+        // Eliminar la última coma y agregar la cláusula WHERE
+        $sql = rtrim($sql, ', ') . " WHERE id = :id";
+        $params[':id'] = $id;
+
+        echo "<pre>";
+        print_r($params);
+        echo "</pre>";
+
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':apellido', $apellido);
-        $stmt->bindParam(':telefono', $telefono);
-        $stmt->bindParam(':id', $id);
-        $stmt->execute();
-        header("Location: client.html");
-        exit;
+        
+        // Vincular parámetros y ejecutar
+        foreach ($params as $key => $value) {
+            echo "Vinculando parámetro: $key => $value\n";  // Debugging binding values
+            $stmt->bindValue($key, $value);
+        }
+
+        echo "Consulta SQL: $sql<br>";
+        echo "Parámetros: ";
+        print_r($params); 
+        
+        if ($stmt->execute()) {
+            echo "Consulta ejecutada correctamente.";
+        } else {
+            echo "Error en la ejecución de la consulta.";
+        }
+        //$stmt->execute();
+        // header("Location: client.html");
+        // exit;
     } catch (PDOException $e) {
         echo "Error al actualizar el cliente: " . $e->getMessage();
     }
 }
+
 
 // Eliminar un cliente
 function eliminarCliente($pdo, $id) {
@@ -116,6 +191,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $telefono = htmlspecialchars(trim($_POST['telefono'] ?? ''));
             $fechaNacimiento = htmlspecialchars(trim($_POST['fechaNacimiento'] ?? ''));
 
+
             // Verificar que todos los campos estén completos
             if ($nombre && $apellido && $tipoDocumento && $numeroDocumento && $telefono && $fechaNacimiento) {
                 crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento);
@@ -129,16 +205,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'update_client':
-            // Obtener los datos del formulario para actualizar un cliente
+            // Obtener los datos del formulario
             $id = intval($_POST['id'] ?? 0);
-            $nombre = htmlspecialchars(trim($_POST['nombre'] ?? ''));
-            $apellido = htmlspecialchars(trim($_POST['apellido'] ?? ''));
-            $telefono = htmlspecialchars(trim($_POST['telefono'] ?? ''));
+            $nombre = isset($_POST['update_nombre']) ? htmlspecialchars(trim($_POST['nombre'] ?? '')) : null;
+            $apellido = isset($_POST['update_apellido']) ? htmlspecialchars(trim($_POST['apellido'] ?? '')) : null;
+            $tipoDocumento = isset($_POST['update_tipoDocumento']) ? htmlspecialchars(trim($_POST['tipoDocumento'] ?? '')) : null;
+            $numeroDocumento = isset($_POST['update_numeroDocumento']) ? htmlspecialchars(trim($_POST['numeroDocumento'] ?? '')) : null;
+            $telefono = isset($_POST['update_telefono']) ? htmlspecialchars(trim($_POST['telefono'] ?? '')) : null;
+            $fechaNacimiento = isset($_POST['update_fechaNacimiento']) ? htmlspecialchars(trim($_POST['fechaNacimiento'] ?? '')) : null;
+            
 
-            if ($id > 0 && $nombre && $apellido && $telefono) {
-                actualizarCliente($pdo, $id, $nombre, $apellido, $telefono);
+            // Depuración: Mostrar los datos recibidos
+            echo "Datos recibidos:<br>";
+            echo "ID: $id<br>";
+            echo "Nombre: $nombre<br>";
+            echo "Apellido: $apellido<br>";
+            echo "Teléfono: $telefono<br>";
+            echo "Fecha de Nacimiento: $fechaNacimiento<br>";
+            echo "Tipo de Documento: $tipoDocumento<br>";
+            echo "Número de Documento: $numeroDocumento<br>";
+            // Solo actualizar si los datos están presentes
+            if ($id > 0) {
+                actualizarCliente($pdo, $id, $nombre, $apellido, $telefono, $fechaNacimiento, $tipoDocumento, $numeroDocumento);
             } else {
-                echo "Error: Debes completar el 'id', 'nombre', 'apellido' y 'telefono'.";
+                echo "Error: Debes completar el 'Codigo'.";
             }
             break;
         

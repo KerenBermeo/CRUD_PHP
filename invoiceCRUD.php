@@ -68,16 +68,28 @@ function eliminarFactura($pdo, $id) {
     }
 }
 
+
+if ($_SERVER["REQUEST_METHOD"] == "GET") {
+    // Verificar si la acción solicitada es 'numeroFactura'
+    $accion = $_GET['action'] ?? '';
+    if ($accion === 'numeroFactura') {
+        // Generar un número de factura aleatorio dentro del rango
+        $numeroFactura = rand(1000, 9999);
+        echo json_encode(["factura_id" => $numeroFactura]);
+        exit;
+    }
+}
+
+
 // Manejo de datos del formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $accion = $_POST['accion'] ?? '';
-    $pdo = new PDO('mysql:host=localhost;dbname=tu_base_de_datos', 'usuario', 'contraseña');
 
     switch ($accion) {
         case 'crear_factura':
             $numeroFactura = htmlspecialchars(trim($_POST['numeroFactura'] ?? ''));
-            $idCliente = intval($_POST['idCliente'] ?? 0);
-            $idProducto = intval($_POST['idProducto'] ?? 0);
+            $nombreCliente = intval($_POST['nombreCliente'] ?? 0);
+            $nombreProducto = intval($_POST['nombreProducto'] ?? 0);
             $cantidad = intval($_POST['cantidad'] ?? 0);
             $valor = floatval($_POST['valor'] ?? 0.0);
 

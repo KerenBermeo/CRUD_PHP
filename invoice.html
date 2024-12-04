@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Facturas</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Puedes agregar tu propio archivo de estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Barra de navegación -->
@@ -32,78 +35,98 @@
                 </ul>
             </div>
         </nav>
+
+        <!-- Título principal -->
+        <h1 class="text-center mb-4">Gestión de Facturas</h1>
+
+        <!-- Botón para crear nueva factura -->
+        <div class="text-center mb-4">
+            <button id="openModal" class="btn btn-dark">Crear Factura</button>
+        </div>
+
+        <!-- Modal para crear factura -->
+        <div id="modal" class="modal fade" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                        
+                    <div class="modal-body">
+                        <p>Numero de factura: <span id="numeroFctura"></span> </p>
+                        <form method="POST" action="invoiceCRUD.php">
+                            <input type="hidden" name="accion" value="crear_factura">
+                            <div class="mb-3">
+                                <label for="nombreCliente" class="form-label">Nombre Cliente:</label>
+                                <input type="text" name="nombreCliente" id="nombreCliente" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="nombreProducto" class="form-label">Nombre Producto:</label>
+                                <input type="text" name="nombreProducto" id="nombreProducto" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="cantidad" class="form-label">Cantidad:</label>
+                                <input type="number" name="cantidad" id="cantidad" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="valor" class="form-label">Valor:</label>
+                                <input type="number" step="0.01" name="valor" id="valor" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="total" class="form-label">Total:</label>
+                                <input type="number" name="total" id="total" class="form-control" required>
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary">Guardar</button>
+                                <button type="button" class="btn btn-secondary" id="closeModal" data-bs-dismiss="modal">Cancelar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección para leer facturas -->
+        <h2 class="mt-4">Leer Facturas</h2>
+        <form method="POST" action="invoiceCRUD.php">
+            <input type="hidden" name="accion" value="leer_facturas">
+            <button type="submit" class="btn btn-info">Ver Todas las Facturas</button>
+        </form>
+
+        <!-- Sección para actualizar factura -->
+        <h2 class="mt-4">Actualizar Factura</h2>
+        <form method="POST" action="invoiceCRUD.php">
+            <input type="hidden" name="accion" value="actualizar_factura">
+            <div class="mb-3">
+                <label for="id" class="form-label">ID de la Factura:</label>
+                <input type="number" name="id" id="id" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="cantidad" class="form-label">Nueva Cantidad:</label>
+                <input type="number" name="cantidad" id="cantidad" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="valor" class="form-label">Nuevo Valor:</label>
+                <input type="number" step="0.01" name="valor" id="valor" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-warning">Actualizar Factura</button>
+        </form>
+
+        <!-- Sección para eliminar factura -->
+        <h2 class="mt-4">Eliminar Factura</h2>
+        <form method="POST" action="invoiceCRUD.php">
+            <input type="hidden" name="accion" value="eliminar_factura">
+            <div class="mb-3">
+                <label for="id" class="form-label">ID de la Factura:</label>
+                <input type="number" name="id" id="id" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-danger">Eliminar Factura</button>
+        </form>
     </div>
 
-    <h1>Gestión de Facturas</h1>
-
-    <!-- Formulario para Crear Factura -->
-    <section>
-        <h2>Crear Factura</h2>
-        <form method="POST">
-            <input type="hidden" name="accion" value="crear_factura">
-            <label for="numeroFactura">Número de Factura:</label>
-            <input type="text" name="numeroFactura" required><br>
-            
-            <label for="idCliente">ID Cliente:</label>
-            <input type="number" name="idCliente" required><br>
-            
-            <label for="idProducto">ID Producto:</label>
-            <input type="number" name="idProducto" required><br>
-            
-            <label for="cantidad">Cantidad:</label>
-            <input type="number" name="cantidad" required><br>
-            
-            <label for="valor">Valor:</label>
-            <input type="number" step="0.01" name="valor" required><br>
-            
-            <button type="submit">Crear Factura</button>
-        </form>
-    </section>
-
-    <!-- Formulario para Leer Facturas -->
-    <section>
-        <h2>Leer Facturas</h2>
-        <form method="POST">
-            <input type="hidden" name="accion" value="leer_facturas">
-            <button type="submit">Ver Todas las Facturas</button>
-        </form>
-    </section>
-
-    <!-- Formulario para Actualizar Factura -->
-    <section>
-        <h2>Actualizar Factura</h2>
-        <form method="POST">
-            <input type="hidden" name="accion" value="actualizar_factura">
-            <label for="id">ID de la Factura:</label>
-            <input type="number" name="id" required><br>
-            
-            <label for="cantidad">Nueva Cantidad:</label>
-            <input type="number" name="cantidad" required><br>
-            
-            <label for="valor">Nuevo Valor:</label>
-            <input type="number" step="0.01" name="valor" required><br>
-            
-            <button type="submit">Actualizar Factura</button>
-        </form>
-    </section>
-
-    <!-- Formulario para Eliminar Factura -->
-    <section>
-        <h2>Eliminar Factura</h2>
-        <form method="POST">
-            <input type="hidden" name="accion" value="eliminar_factura">
-            <label for="id">ID de la Factura:</label>
-            <input type="number" name="id" required><br>
-            
-            <button type="submit">Eliminar Factura</button>
-        </form>
-    </section>
-
-    <!-- Resultado de las operaciones (mensajes) -->
-    <section>
-        <h2>Resultado de la Operación</h2>
-        <div id="resultado"></div>
-    </section>
-
+    <!-- Scripts de Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
+

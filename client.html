@@ -22,7 +22,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="bb.html">Acerca de</a>
+                        <a class="nav-link" href="index.html">Acerca de</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="products.html">Productos</a>
@@ -106,30 +106,56 @@
         <form method="POST" action="clientCRUD.php">
             <input type="hidden" name="accion" value="update_client">
             <div class="mb-3">
-                <label for="idActualizar" class="form-label">ID del Cliente:</label>
+                <label for="idActualizar" class="form-label">Código del Cliente:</label>
                 <input type="number" name="id" id="idActualizar" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="nombreActualizar" class="form-label">Nuevo Nombre:</label>
-                <input type="text" name="nombre" id="nombreActualizar" class="form-control" required>
+                <input type="text" name="nombre" id="nombreActualizar" class="form-control">
+                <input type="checkbox" name="update_nombre" id="update_nombre"> Actualizar Nombre
             </div>
             <div class="mb-3">
                 <label for="apellidoActualizar" class="form-label">Nuevo Apellido:</label>
-                <input type="text" name="apellido" id="apellidoActualizar" class="form-control" required>
+                <input type="text" name="apellido" id="apellidoActualizar" class="form-control">
+                <input type="checkbox" name="update_apellido" id="update_apellido"> Actualizar Apellido
+            </div>
+            <!-- Tipo de documento -->
+            <div class="mb-3">
+                <label for="tipoDocumento" class="form-label">Tipo de Documento:</label>
+                <select name="tipoDocumento" id="tipoDocumento" class="form-control">
+                    <option value="">Seleccionar</option>
+                    <option value="CC">CC</option>
+                    <option value="TI">TI</option>
+                    <option value="CE">CE</option>
+                </select>
+                <input type="checkbox" name="update_tipoDocumento" id="update_tipoDocumento"> Actualizar Tipo de Documento
+            </div>
+            <!-- Número de documento -->
+            <div class="mb-3">
+                <label for="numeroDocumento" class="form-label">Número de Documento:</label>
+                <input type="text" name="numeroDocumento" id="numeroDocumento" class="form-control">
+                <input type="checkbox" name="update_numeroDocumento" id="update_numeroDocumento"> Actualizar Número de Documento
             </div>
             <div class="mb-3">
                 <label for="telefonoActualizar" class="form-label">Nuevo Teléfono:</label>
-                <input type="text" name="telefono" id="telefonoActualizar" class="form-control" required>
+                <input type="text" name="telefono" id="telefonoActualizar" class="form-control">
+                <input type="checkbox" name="update_telefono" id="update_telefono"> Actualizar Teléfono
+            </div>
+            <div class="mb-3">
+                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
+                <input type="date" name="fechaNacimiento" id="fechaNacimiento" class="form-control">
+                <input type="checkbox" name="update_fechaNacimiento" id="update_fechaNacimiento"> Actualizar Fecha de Nacimiento
             </div>
             <button type="submit" class="btn btn-warning">Actualizar Cliente</button>
         </form>
+
 
         <!-- Sección para eliminar clientes -->
         <h2 class="mt-4">Eliminar Cliente</h2>
         <form method="POST" action="clientCRUD.php">
             <input type="hidden" name="accion" value="delete_client">
             <div class="mb-3">
-                <label for="idEliminar" class="form-label">ID del Cliente:</label>
+                <label for="idEliminar" class="form-label">Codigo del Cliente:</label>
                 <input type="number" name="id" id="idEliminar" class="form-control" required>
             </div>
             <button type="submit" class="btn btn-danger">Eliminar Cliente</button>
