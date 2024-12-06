@@ -3,41 +3,111 @@ require_once 'connection.php';
 // Crear una factura
 function crearFactura($pdo, $nombreCliente, $nombreProducto, $cantidad, $valor) {
     try {
-        $sql = "INSERT INTO factura (nombre_cliente, nombre_producto, cantidad, valor) 
-                VALUES (:idCliente, :nombreProducto, :cantidad, :valor)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nombreCliente', $nombreCliente);
-        $stmt->bindParam(':nombreProducto', $nombreProducto);
-        $stmt->bindParam(':cantidad', $cantidad);
-        $stmt->bindParam(':valor', $valor);
-        $stmt->execute();
-        echo "Factura creada exitosamente.";
+        // Obtener el id del cliente
+        $sqlCliente = "SELECT id FROM cliente WHERE nombre = :nombreCliente";
+        $stmtCliente = $pdo->prepare($sqlCliente);
+        $stmtCliente->bindParam(':nombreCliente', $nombreCliente);
+        $stmtCliente->execute();
+        $cliente = $stmtCliente->fetch(PDO::FETCH_ASSOC);
+
+        if (!$cliente) {
+            throw new Exception("Cliente no encontrado.");
+        }
+        $idCliente = $cliente['id'];
+
+        // Obtener el id del producto
+        $sqlProducto = "SELECT id FROM producto WHERE nombre_producto = :nombreProducto";
+        $stmtProducto = $pdo->prepare($sqlProducto);
+        $stmtProducto->bindParam(':nombreProducto', $nombreProducto);
+        $stmtProducto->execute();
+        $producto = $stmtProducto->fetch(PDO::FETCH_ASSOC);
+
+        if (!$producto) {
+            throw new Exception("Producto no encontrado.");
+        }
+        $idProducto = $producto['id'];
+
+        // Insertar la factura
+        $sqlFactura = "INSERT INTO factura (id_cliente, id_producto, cantidad, valor) 
+                       VALUES (:idCliente, :idProducto, :cantidad, :valor)";
+        $stmtFactura = $pdo->prepare($sqlFactura);
+        $stmtFactura->bindParam(':idCliente', $idCliente);
+        $stmtFactura->bindParam(':idProducto', $idProducto);
+        $stmtFactura->bindParam(':cantidad', $cantidad);
+        $stmtFactura->bindParam(':valor', $valor);
+        $stmtFactura->execute();
+
+        header("Location: client.html");
+        exit;
     } catch (PDOException $e) {
-        echo "Error al crear la factura: " . $e->getMessage();
+        echo "Error de base de datos: " . $e->getMessage();
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
+
 
 // Leer todas las facturas
 function leerFacturas($pdo) {
     try {
-        $sql = "SELECT f.id, f.numero_factura, c.nombre AS cliente, p.nombre_producto AS producto, f.cantidad, f.valor 
-                FROM factura f 
-                INNER JOIN cliente c ON f.id_cliente = c.id 
-                INNER JOIN producto p ON f.id_producto = p.id";
+        // Consulta para obtener las facturas con los datos del cliente y producto
+        $sql = "SELECT 
+                    f.numero_factura, 
+                    c.nombre AS cliente_nombre, 
+                    c.apellido AS cliente_apellido, 
+                    p.nombre_producto, 
+                    f.cantidad, 
+                    f.valor 
+                FROM factura f
+                JOIN cliente c ON f.id_cliente = c.id
+                JOIN producto p ON f.id_producto = p.id";
+        
         $stmt = $pdo->query($sql);
         $facturas = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+        $html = <<<HTML
+        <div style="max-width: 1200px; margin: 0 auto; font-family: Arial, sans-serif;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <a href="invoice.html" style="text-decoration: none;">
+                    <button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Volver</button>
+                </a>
+                <h1 style="color: #333;">Lista de Facturas</h1>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        HTML;
+
+        // Mostrar cada factura con los datos correspondientes
         foreach ($facturas as $factura) {
-            echo "NumeroFactura: " . $factura['id'] . "<br>";
-            echo "Cliente: " . $factura['cliente'] . "<br>";
-            echo "Producto: " . $factura['producto'] . "<br>";
-            echo "Cantidad: " . $factura['cantidad'] . "<br>";
-            echo "Valor: $" . $factura['valor'] . "<br><br>";
+            $idFactura = htmlspecialchars($factura['numero_factura']);
+            $clienteNombre = htmlspecialchars($factura['cliente_nombre']);
+            $clienteApellido = htmlspecialchars($factura['cliente_apellido']);
+            $productoNombre = htmlspecialchars($factura['nombre_producto']);
+            $cantidad = htmlspecialchars($factura['cantidad']);
+            $valor = htmlspecialchars($factura['valor']);
+
+            // Aquí se construye cada factura con la información obtenida
+            $html .= <<<HTML
+            <div style="border: 1px solid #ddd; padding: 10px; background-color: #f9f9f9;">
+                <h3>Factura #$idFactura</h3>
+                <p><strong>Cliente:</strong> $clienteNombre $clienteApellido</p>
+                <p><strong>Producto:</strong> $productoNombre</p>
+                <p><strong>Cantidad:</strong> $cantidad</p>
+                <p><strong>Valor:</strong> $$valor</p>
+            </div>
+            HTML;
         }
+
+        $html .= <<<HTML
+            </div>
+        </div>
+        HTML;
+
+        echo $html;
     } catch (PDOException $e) {
         echo "Error al leer las facturas: " . $e->getMessage();
     }
 }
+
 
 
 // Eliminar una factura
@@ -55,12 +125,11 @@ function eliminarFactura($pdo, $id) {
 
 function numeroFactura($pdo) {
     try {
-        // Usando query porque la consulta no tiene parámetros dinámicos
         $query = "SELECT MAX(numero_factura) AS max_numero_factura FROM Factura";
         $result = $pdo->query($query)->fetch(PDO::FETCH_ASSOC);
-
-        // Retornar el valor máximo encontrado, o 1 si es nulo
-        return $result['max_numero_factura'] ?? 1;
+        
+        $maxFactura = $result['max_numero_factura'] ?? 0;
+        return $maxFactura + 1;
     } catch (PDOException $e) {
         echo "Error en numeroFactura: " . $e->getMessage();
         return 0;
@@ -115,8 +184,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch ($accion) {
         case 'crear_factura':
-            $nombreCliente = intval($_POST['nombreCliente'] ?? 0);
-            $nombreProducto = intval($_POST['nombreProducto'] ?? 0);
+            $nombreCliente = htmlspecialchars(trim($_POST['nombreCliente'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $nombreProducto = htmlspecialchars(trim($_POST['nombreProducto'] ?? ''), ENT_QUOTES, 'UTF-8');
             $cantidad = intval($_POST['cantidad'] ?? 0);
             $valor = floatval($_POST['valor'] ?? 0.0);
 

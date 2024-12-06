@@ -106,27 +106,42 @@
         <form method="POST" action="clientCRUD.php">
             <input type="hidden" name="accion" value="update_client">
             <div class="mb-3">
-                <label for="idActualizar" class="form-label">Codigo del Cliente:</label>
+                <label for="idActualizar" class="form-label">Código del Cliente:</label>
                 <input type="number" name="id" id="idActualizar" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="nombreActualizar" class="form-label">Nuevo Nombre:</label>
-                <input type="text" name="nombre" id="nombreActualizar" class="form-control" required>
+                <input type="text" name="nombre" id="nombreActualizar" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="apellidoActualizar" class="form-label">Nuevo Apellido:</label>
-                <input type="text" name="apellido" id="apellidoActualizar" class="form-control" required>
+                <input type="text" name="apellido" id="apellidoActualizar" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="tipoDocumentoActualizar" class="form-label">Nuevo Tipo de Documento:</label>
+                <select name="tipo_documento" id="tipoDocumentoActualizar" class="form-control">
+                    <option value="">Seleccione</option>
+                    <option value="CC">Cédula de Ciudadanía</option>
+                    <option value="TI">Tarjeta de Identidad</option>
+                    <option value="CE">Cédula de Extranjería</option>
+                    <option value="RN">Registro Nacional</option>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="numeroDocumentoActualizar" class="form-label">Nuevo Número de Documento:</label>
+                <input type="text" name="numero_documento" id="numeroDocumentoActualizar" class="form-control">
             </div>
             <div class="mb-3">
                 <label for="telefonoActualizar" class="form-label">Nuevo Teléfono:</label>
-                <input type="text" name="telefono" id="telefonoActualizar" class="form-control" required>
+                <input type="text" name="telefono" id="telefonoActualizar" class="form-control">
             </div>
             <div class="mb-3">
-                <label for="fechaNacimiento" class="form-label">Fecha de Nacimiento:</label>
-                <input type="date" name="fechaNacimiento" id="fechaNacimiento" class="form-control" required>
+                <label for="fechaNacimiento" class="form-label">Nueva Fecha de Nacimiento:</label>
+                <input type="date" name="fecha_nacimiento" id="fechaNacimiento" class="form-control">
             </div>
             <button type="submit" class="btn btn-warning">Actualizar Cliente</button>
         </form>
+
 
 
         <!-- Sección para eliminar clientes -->

@@ -23,6 +23,7 @@ function crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento
     }
 }
 
+
 // Leer todos los clientes
 function leerClientes($pdo) {
     try {
@@ -76,22 +77,42 @@ function leerClientes($pdo) {
 }
 
 // Actualizar un cliente
-function actualizarCliente($pdo, $id, $nombre, $apellido, $telefono, $fechaNacimiento) {
+function actualizarCliente($pdo, $id, $campos) {
     try {
-        $sql = "UPDATE cliente SET nombre = :nombre, apellido = :apellido, telefono = :telefono, fecha_nacimiento = :fechaNacimiento WHERE id = :id";
+        // Construir la consulta dinámica
+        $setPart = [];
+        foreach ($campos as $campo => $valor) {
+            if (!empty($valor)) { // Solo agregar campos que no estén vacíos
+                $setPart[] = "$campo = :$campo";
+            }
+        }
+
+        // Verificar si hay campos a actualizar
+        if (empty($setPart)) {
+            throw new Exception("No hay campos para actualizar.");
+        }
+
+        $sql = "UPDATE cliente SET " . implode(", ", $setPart) . " WHERE id = :id";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':nombre', $nombre);
-        $stmt->bindParam(':apellido', $apellido);
-        $stmt->bindParam(':telefono', $telefono);
-        $stmt->bindParam(':fechaNacimiento', $fechaNacimiento);
-        $stmt->bindParam(':id', $id);
+
+        // Asignar valores a los parámetros
+        foreach ($campos as $campo => $valor) {
+            if (!empty($valor)) {
+                $stmt->bindValue(":$campo", $valor);
+            }
+        }
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+
         $stmt->execute();
         header("Location: client.html");
         exit;
     } catch (PDOException $e) {
         echo "Error al actualizar el cliente: " . $e->getMessage();
+    } catch (Exception $e) {
+        echo "Error: " . $e->getMessage();
     }
 }
+
 
 
 // Eliminar un cliente
@@ -114,21 +135,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     switch ($accion) {
         case 'create_client':
-            // Obtener los datos del formulario para crear un cliente
+            // Recoger los datos enviados desde el formulario
             $nombre = htmlspecialchars(trim($_POST['nombre'] ?? ''));
             $apellido = htmlspecialchars(trim($_POST['apellido'] ?? ''));
-            $tipoDocumento = htmlspecialchars(trim($_POST['tipoDocumento'] ?? ''));
-            $numeroDocumento = htmlspecialchars(trim($_POST['numeroDocumento'] ?? ''));
+            $tipo_documento = htmlspecialchars(trim($_POST['tipoDocumento'] ?? ''));
+            $numero_documento = htmlspecialchars(trim($_POST['numeroDocumento'] ?? ''));
             $telefono = htmlspecialchars(trim($_POST['telefono'] ?? ''));
-            $fechaNacimiento = htmlspecialchars(trim($_POST['fechaNacimiento'] ?? ''));
+            $fecha_nacimiento = htmlspecialchars(trim($_POST['fechaNacimiento'] ?? ''));
 
-
-            // Verificar que todos los campos estén completos
-            if ($nombre && $apellido && $tipoDocumento && $numeroDocumento && $telefono && $fechaNacimiento) {
-                crearCliente($pdo, $nombre, $apellido, $tipoDocumento, $numeroDocumento, $telefono, $fechaNacimiento);
-            } else {
-                echo "Error: Todos los campos son obligatorios.";
+            // Validar la fecha de nacimiento
+            if (!empty($fecha_nacimiento)) {
+                $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha_nacimiento);
+                if ($fechaObj) {
+                    $fecha_nacimiento = $fechaObj->format('Y-m-d');
+                } else {
+                    echo "Error: Fecha de nacimiento no válida.";
+                    exit;
+                }
             }
+
+            // Verificar que los campos obligatorios no estén vacíos
+            if (empty($nombre) || empty($apellido) || empty($tipo_documento) || empty($numero_documento) || empty($telefono) || empty($fecha_nacimiento)) {
+                echo "Error: Todos los campos son obligatorios.";
+                exit;
+            }
+
+            // Llamar a la función para crear el cliente
+            crearCliente($pdo, $nombre, $apellido, $tipo_documento, $numero_documento, $telefono, $fecha_nacimiento);
             break;
 
         case 'read_client':
@@ -136,40 +169,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             break;
 
         case 'update_client':
-            // Obtener los datos del formulario
-            $id = intval($_POST['id'] ?? 0);
-            $nombre = isset($_POST['update_nombre']) ? htmlspecialchars(trim($_POST['nombre'] ?? '')) : null;
-            $apellido = isset($_POST['update_apellido']) ? htmlspecialchars(trim($_POST['apellido'] ?? '')) : null;
-            $tipoDocumento = isset($_POST['update_tipoDocumento']) ? htmlspecialchars(trim($_POST['tipoDocumento'] ?? '')) : null;
-            $numeroDocumento = isset($_POST['update_numeroDocumento']) ? htmlspecialchars(trim($_POST['numeroDocumento'] ?? '')) : null;
-            $telefono = isset($_POST['update_telefono']) ? htmlspecialchars(trim($_POST['telefono'] ?? '')) : null;
-            $fechaNacimiento = isset($_POST['update_fechaNacimiento']) ? htmlspecialchars(trim($_POST['fechaNacimiento'] ?? '')) : null;
-            
-
-            // Depuración: Mostrar los datos recibidos
-            echo "Datos recibidos:<br>";
-            echo "ID: $id<br>";
-            echo "Nombre: $nombre<br>";
-            echo "Apellido: $apellido<br>";
-            echo "Teléfono: $telefono<br>";
-            echo "Fecha de Nacimiento: $fechaNacimiento<br>";
-            echo "Tipo de Documento: $tipoDocumento<br>";
-            echo "Número de Documento: $numeroDocumento<br>";
-            // Solo actualizar si los datos están presentes
-            if ($id > 0) {
-                actualizarCliente($pdo, $id, $nombre, $apellido, $telefono, $fechaNacimiento, $tipoDocumento, $numeroDocumento);
+            $id = $_POST['id'] ?? null;
+            $nombre = $_POST['nombre'] ?? '';
+            $apellido = $_POST['apellido'] ?? '';
+            $tipo_documento = $_POST['tipo_documento'] ?? '';
+            $numero_documento = $_POST['numero_documento'] ?? '';
+            $telefono = $_POST['telefono'] ?? '';
+            $fecha_nacimiento = $_POST['fecha_nacimiento'] ?? '';
+        
+            // Validar y reformatear la fecha si no está vacía
+            if (!empty($fecha_nacimiento)) {
+                $fechaObj = DateTime::createFromFormat('Y-m-d', $fecha_nacimiento);
+                if ($fechaObj) {
+                    $fecha_nacimiento = $fechaObj->format('Y-m-d');
+                } else {
+                    echo "Error: Fecha de nacimiento no válida.";
+                    exit;
+                }
+            }
+        
+            if ($id) {
+                $campos = [
+                    'nombre' => $nombre,
+                    'apellido' => $apellido,
+                    'tipo_documento' => $tipo_documento,
+                    'numero_documento' => $numero_documento,
+                    'telefono' => $telefono,
+                    'fecha_nacimiento' => $fecha_nacimiento
+                ];
+        
+                actualizarCliente($pdo, $id, $campos);
             } else {
-                echo "Error: Debes completar el 'Codigo'.";
+                echo "Error: ID del cliente es obligatorio.";
             }
             break;
+            
         
         case 'delete_client':
-            $id = intval($_POST['id'] ?? 0);
-            if ($id > 0) {
-                eliminarCliente($pdo, $id);
-            } else {
-                echo "Error: El campo 'id' es obligatorio.";
-            }
+            $id = $_POST['id'] ?? null;
+
+            eliminarCliente($pdo, $id);
             break;
 
         default:
